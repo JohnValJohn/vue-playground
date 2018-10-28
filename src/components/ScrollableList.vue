@@ -35,9 +35,13 @@ export default {
         this.globalTime,
         this.endValues
       );
-      let pixelToScroll = 30 * indexOfCurrentSubtitle; //todo : put 30 in conf. it is the height of a subtitle
-      this.container.scrollTop = pixelToScroll;
-      console.log(pixelToScroll);
+      if (indexOfCurrentSubtitle !== null) {
+        let pixelToScroll = 30 * indexOfCurrentSubtitle; //todo : put 30 in conf. it is the height of a subtitle
+        this.container.scrollTop = pixelToScroll;
+        console.log(pixelToScroll);
+      } else {
+        this.container.scrollTop = 30 * this.subtitles.length;
+      }
     }
   },
   mounted: function() {
