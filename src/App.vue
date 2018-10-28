@@ -1,11 +1,11 @@
 <template>
   <v-app>
-    <v-toolbar app>
+    <v-toolbar>
     </v-toolbar>
 
     <v-content>
       <v-container>
-      <ScrollableList/>
+        <scrollable-list></scrollable-list>
       </v-container>
     </v-content>
   </v-app>
