@@ -1,7 +1,7 @@
 <template>
     <div> 
       <div class = "fixedDimensions" id="scroll-container-subtitles" v-on:scroll="scrollHandler()">
-        <subtitle v-for="(subtitle, index) in subtitles" :key="index" :subtitle="subtitle"></subtitle>
+        <subtitle v-for="(subtitle, index) in displayList" :key="index" :subtitle="subtitle"></subtitle>
       </div>
     </div>
 </template>
@@ -19,7 +19,9 @@ export default {
   data() {
     return {
       subtitles: [],
-      container: {}
+      displayList: [],
+      container: {},
+      numberOfElementsToDisplay: Math.ceil(600 / 30) + 2 //600 is div height, 30 is subtitle height. We add 2 elements to be safe. todo: put values in conf
     };
   },
   computed: {
@@ -35,26 +37,39 @@ export default {
       this.updateDisplayList();
     }, 100),
     updateDisplayList: function() {
-      console.log("you scrolled");
+      this.displayList = this.subtitles.slice(
+        this.indexOfCurrentSubtitle,
+        this.indexOfCurrentSubtitle + this.numberOfElementsToDisplay
+      );
+    },
+    scroll() {
+      if (this.indexOfCurrentSubtitle !== null) {
+        let pixelToScroll = 30 * this.indexOfCurrentSubtitle; //todo : put 30 in conf. it is the height of a subtitle
+        this.container.scrollTop = pixelToScroll;
+      } else {
+        this.container.scrollTop = 30 * this.subtitles.length;
+      }
+    },
+    updateIndexOfCurrentSubtitle() {
+      this.indexOfCurrentSubtitle = getIndexOfCurrentSubtitle(
+        this.globalTime,
+        this.endValues
+      );
     }
   },
   watch: {
     globalTime() {
-      let indexOfCurrentSubtitle = getIndexOfCurrentSubtitle(
-        this.globalTime,
-        this.endValues
-      );
-      if (indexOfCurrentSubtitle !== null) {
-        let pixelToScroll = 30 * indexOfCurrentSubtitle; //todo : put 30 in conf. it is the height of a subtitle
-        this.container.scrollTop = pixelToScroll;
-        console.log(pixelToScroll);
-      } else {
-        this.container.scrollTop = 30 * this.subtitles.length;
-      }
+      this.updateIndexOfCurrentSubtitle();
+      this.scroll();
+    },
+    subtitles() {
+      this.updateIndexOfCurrentSubtitle();
+      this.updateDisplayList();
     }
   },
   mounted: function() {
     this.subtitles = subtitles;
+
     this.container = document.getElementById("scroll-container-subtitles");
   }
 };
