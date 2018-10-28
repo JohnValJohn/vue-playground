@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card>{{subtitle.start}} - {{subtitle.end}} : {{subtitle.text}}</v-card>
+        <v-card height="30px">{{subtitle.start}} - {{subtitle.end}} : {{subtitle.text}}</v-card>
     </div>
 </template>
 
