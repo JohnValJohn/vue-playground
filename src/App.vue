@@ -5,6 +5,7 @@
 
     <v-content>
       <v-container>
+        <time-setter></time-setter>
         <scrollable-list></scrollable-list>
       </v-container>
     </v-content>
@@ -13,11 +14,13 @@
 
 <script>
 import ScrollableList from "./components/ScrollableList";
+import TimeSetter from "./components/TimeSetter.vue";
 
 export default {
   name: "App",
   components: {
-    ScrollableList
+    ScrollableList,
+    TimeSetter
   },
   data() {
     return {
