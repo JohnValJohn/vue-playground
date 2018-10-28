@@ -1,6 +1,6 @@
 <template>
     <div> 
-      <div class = "fixedDimensions" id="scroll-container-subtitles">
+      <div class = "fixedDimensions" id="scroll-container-subtitles" v-on:scroll="scrollHandler()">
         <subtitle v-for="(subtitle, index) in subtitles" :key="index" :subtitle="subtitle"></subtitle>
       </div>
     </div>
@@ -10,6 +10,7 @@
 import { subtitles } from "../subtitles.js";
 import Subtitle from "./Subtitle.vue";
 import { getIndexOfCurrentSubtitle } from "../utils/utils.js";
+import throttle from "lodash/throttle";
 
 export default {
   components: {
@@ -27,6 +28,14 @@ export default {
     },
     globalTime() {
       return this.$store.state.globalTime;
+    }
+  },
+  methods: {
+    scrollHandler: throttle(function() {
+      this.updateDisplayList();
+    }, 100),
+    updateDisplayList: function() {
+      console.log("you scrolled");
     }
   },
   watch: {
