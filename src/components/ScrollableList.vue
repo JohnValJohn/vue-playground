@@ -1,8 +1,8 @@
 <template>
     <div> 
       <div class = "fixedDimensions" id="scroll-container-subtitles" v-on:scroll="scrollHandler()">
-        <div v-bind:style="{ height: beforeHeight + 'px'}"></div>
-        <div v-bind:style="{height: afterHeight + 'px'}">
+        <!-- <div v-bind:style="{ height: beforeHeight + 'px'}"></div> -->
+        <div v-bind:style="{position:'relative', top: beforeHeight + 'px', height: afterHeight + 'px'}">
           <subtitle v-for="(subtitle, index) in displayList" :key="index" :subtitle="subtitle"></subtitle>
         </div>
       </div>
@@ -40,8 +40,9 @@ export default {
     },
     afterHeight() {
       return (
-        30 * (this.subtitles.length - this.numberOfElementsToDisplay) -
-        this.beforeHeight
+        30 * this.subtitles.length -
+        this.beforeHeight +
+        30 * this.numberOfElementsToDisplay
       );
     }
   },
