@@ -74,17 +74,6 @@ export default {
     updateIndexOfCurrentSubtitleBasedOnScroll(beforeHeight) {
       let totalHeight = 30 * this.subtitles.length
       this.indexOfCurrentSubtitle = Math.floor((beforeHeight / totalHeight)*this.subtitles.length)
-      // let scrollAmount = this.container.scrollTop - this.currentScrollPosition;
-      // let newIndex = (this.indexOfCurrentSubtitle += Math.floor(
-      //   scrollAmount / 30
-      // ));
-      // if (newIndex < 0) {
-      //   newIndex = 0;
-      // } else if (newIndex > this.subtitles.length - 1) {
-      //   newIndex = this.subtitles.length - 1;
-      // }
-      // this.indexOfCurrentSubtitle = newIndex;
-      // this.currentScrollPosition = this.container.scrollTop;
     }
   },
   watch: {
