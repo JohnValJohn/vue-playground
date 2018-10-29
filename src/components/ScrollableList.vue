@@ -23,8 +23,8 @@ export default {
       subtitles: [],
       displayList: [],
       container: {},
+      indexOfCurrentSubtitle: 0,
       beforeHeight: 0,
-      currentScrollPosition: 0,
       amountAddedToBeforeHeight: 0,
       numberOfElementsToDisplay: Math.ceil(600 / 30) + 2 //600 is div height, 30 is subtitle height. We add 2 elements to be safe. todo: put values in conf
     };
@@ -78,8 +78,11 @@ export default {
   },
   watch: {
     globalTime() {
-      this.updateIndexOfCurrentSubtitleBasedOnTime();
-      this.scroll();
+      let subtitleIndex = getIndexOfCurrentSubtitle(this.globalTime, this.endValues);
+      if(subtitleIndex > this.indexOfCurrentSubtitle) {
+        this.indexOfCurrentSubtitle = subtitleIndex
+        this.scroll();
+      }      
     },
     subtitles() {
       this.updateIndexOfCurrentSubtitleBasedOnTime();
