@@ -1,7 +1,6 @@
 <template>
     <div> 
       <div class = "fixedDimensions" id="scroll-container-subtitles" v-on:scroll="scrollHandler()">
-        <!-- <div v-bind:style="{ height: beforeHeight + 'px'}"></div> -->
         <div v-bind:style="{position:'relative', top: beforeHeight + 'px', height: afterHeight + 'px'}">
           <subtitle v-for="(subtitle, index) in displayList" :key="index" :subtitle="subtitle"></subtitle>
         </div>
@@ -25,7 +24,6 @@ export default {
       displayList: [],
       container: {},
       beforeHeight: 0,
-      middleHeight: 600,
       currentScrollPosition: 0,
       amountAddedToBeforeHeight: 0,
       numberOfElementsToDisplay: Math.ceil(600 / 30) + 2 //600 is div height, 30 is subtitle height. We add 2 elements to be safe. todo: put values in conf
@@ -39,20 +37,18 @@ export default {
       return this.$store.state.globalTime;
     },
     afterHeight() {
-      return (
-        30 * this.subtitles.length -
-        this.beforeHeight +
-        30 * this.numberOfElementsToDisplay
-      );
+      return ( 30 * this.subtitles.length - this.beforeHeight);
     }
   },
   methods: {
-    scrollHandler: throttle(function() {
-      this.updateIndexOfCurrentSubtitleBasedOnScroll();
-      this.beforeHeight = this.container.scrollTop;
-
+    scrollHandler: throttle(function() {      
+      let beforeHeight = this.container.scrollTop
+      if (beforeHeight > (30 * this.subtitles.length - 600)) {
+        beforeHeight = 30 * this.subtitles.length - 600
+      }
+      this.beforeHeight = beforeHeight
+      this.updateIndexOfCurrentSubtitleBasedOnScroll(beforeHeight);
       this.updateDisplayList();
-      // }
     }, 100),
     updateDisplayList: function() {
       this.displayList = this.subtitles.slice(
@@ -75,18 +71,20 @@ export default {
         this.endValues
       );
     },
-    updateIndexOfCurrentSubtitleBasedOnScroll() {
-      let scrollAmount = this.container.scrollTop - this.currentScrollPosition;
-      let newIndex = (this.indexOfCurrentSubtitle += Math.floor(
-        scrollAmount / 30
-      ));
-      if (newIndex < 0) {
-        newIndex = 0;
-      } else if (newIndex > this.subtitles.length - 1) {
-        newIndex = this.subtitles.length - 1;
-      }
-      this.indexOfCurrentSubtitle = newIndex;
-      this.currentScrollPosition = this.container.scrollTop;
+    updateIndexOfCurrentSubtitleBasedOnScroll(beforeHeight) {
+      let totalHeight = 30 * this.subtitles.length
+      this.indexOfCurrentSubtitle = Math.floor((beforeHeight / totalHeight)*this.subtitles.length)
+      // let scrollAmount = this.container.scrollTop - this.currentScrollPosition;
+      // let newIndex = (this.indexOfCurrentSubtitle += Math.floor(
+      //   scrollAmount / 30
+      // ));
+      // if (newIndex < 0) {
+      //   newIndex = 0;
+      // } else if (newIndex > this.subtitles.length - 1) {
+      //   newIndex = this.subtitles.length - 1;
+      // }
+      // this.indexOfCurrentSubtitle = newIndex;
+      // this.currentScrollPosition = this.container.scrollTop;
     }
   },
   watch: {
